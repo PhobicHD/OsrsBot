@@ -32,7 +32,7 @@ public class Equipment extends MethodProvider {
 			if (methods.bank.isOpen()) {
 				methods.bank.close();
 			}
-			methods.game.openTab(InterfaceTab.EQUIPMENT);
+			//methods.game.openTab(InterfaceTab.EQUIPMENT);
 			sleep(random(900, 1500));
 		}
 		return methods.interfaces.get(WidgetIndices.WornEquipmentTab.GROUP_INDEX);
