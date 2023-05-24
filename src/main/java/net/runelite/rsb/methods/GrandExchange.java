@@ -6,6 +6,9 @@ import net.runelite.rsb.internal.globval.WidgetIndices;
 import net.runelite.rsb.wrappers.RSItem;
 import net.runelite.rsb.wrappers.RSWidget;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 /**
  * Obtains information on tradeable items from the Grand Exchange website and
  * Grand Exchange ingame interaction.
@@ -497,10 +500,20 @@ public class GrandExchange extends MethodProvider {
 				sleep(random(200,400));
 				RSWidget chatbox = methods.interfaces.getComponent(GlobalWidgetInfo.GRAND_EXCHANGE_SEARCH_INPUT);
 				if (chatbox.isValid() && chatbox.isVisible()) {
-					methods.keyboard.sendText(name, true);
+					methods.keyboard.sendText(name, false);
+					sleep(2000);
+					RSWidget[] items = methods.interfaces.getComponent(GlobalWidgetInfo.GRAND_EXCHANGE_SEARCH_DYNAMIC_CONTAINER).getComponents();
+					Optional<RSWidget> widgetOptional = Arrays.stream(items).filter((x) -> Menu.stripFormatting(x.getName()).equals(name)).findFirst();
+					if (widgetOptional.isPresent()) {
+						widgetOptional.get().doAction("Select");
+						sleep(2000);
+					}
 				}
 				sleep(random(80,600));
-				return createOffer(quantity, priceChange);
+				if (Arrays.stream(methods.interfaces.getComponent(GlobalWidgetInfo.GRAND_EXCHANGE_OFFER_WINDOW).getComponents())
+						.anyMatch((x) -> x.getText().equals(name))) {
+					return createOffer(quantity, priceChange);
+				}
 			}
 		}
 		return false;
