@@ -64,7 +64,7 @@ public class GrandExchange extends MethodProvider {
 			int slotComponent = mapSlotToSlotIndex(slot);
 			if (isOpen()) {
 				return methods.interfaces.getComponent(WidgetIndices.GrandExchange.PARENT_CONTAINER, slotComponent)
-						.getDynamicComponent(WidgetIndices.GrandExchange.TITLE_DYNAMIC_CONTAINER).containsText("Empty");
+						.getDynamicComponent(WidgetIndices.GrandExchange.OFFER_STATUS_ITEM_DESCRIPTION_LABEL).containsText("Empty");
 			} else {
 				return false;
 			}
@@ -192,6 +192,25 @@ public class GrandExchange extends MethodProvider {
 		collectFromSlot(geWidget, collectAs);
 		collectAs += "s";
 		collectFromSlot(geWidget, collectAs);
+	}
+
+	/**
+	 * A method to collect all items to inventory or the bank
+	 *
+	 * @param toBank whether the item should be collect to the bank
+	 */
+	public void collectAll(boolean toBank) {
+		String collectAs = "Collect";
+		if (!toBank) {
+			collectAs += " to inventory";
+		}
+		else {
+			collectAs += " to bank";
+		}
+		RSWidget geWidget = methods.interfaces.getComponent(GlobalWidgetInfo.GRAND_EXCHANGE_TITLE);
+		geWidget = geWidget.getDynamicComponent(0);
+		geWidget.doAction(collectAs);
+		sleep(random(400, 900));
 	}
 
 	/**
@@ -612,14 +631,14 @@ public class GrandExchange extends MethodProvider {
 
 	public int mapSlotToSlotIndex(int slot) {
 		return switch (slot) {
-			case 0 -> WidgetIndices.GrandExchange.FIRST_SLOT_DYNAMIC_CONTAINER;
-			case 1 -> WidgetIndices.GrandExchange.SECOND_SLOT_DYNAMIC_CONTAINER;
-			case 2 -> WidgetIndices.GrandExchange.THIRD_SLOT_DYNAMIC_CONTAINER;
-			case 3 -> WidgetIndices.GrandExchange.FOURTH_SLOT_DYNAMIC_CONTAINER;
-			case 4 -> WidgetIndices.GrandExchange.FIFTH_SLOT_DYNAMIC_CONTAINER;
-			case 5 -> WidgetIndices.GrandExchange.SIXTH_SLOT_DYNAMIC_CONTAINER;
-			case 6 -> WidgetIndices.GrandExchange.SEVENTH_SLOT_DYNAMIC_CONTAINER;
-			case 7 -> WidgetIndices.GrandExchange.EIGHT_SLOT_DYNAMIC_CONTAINER;
+			case 1 -> WidgetIndices.GrandExchange.FIRST_SLOT_DYNAMIC_CONTAINER;
+			case 2 -> WidgetIndices.GrandExchange.SECOND_SLOT_DYNAMIC_CONTAINER;
+			case 3 -> WidgetIndices.GrandExchange.THIRD_SLOT_DYNAMIC_CONTAINER;
+			case 4 -> WidgetIndices.GrandExchange.FOURTH_SLOT_DYNAMIC_CONTAINER;
+			case 5 -> WidgetIndices.GrandExchange.FIFTH_SLOT_DYNAMIC_CONTAINER;
+			case 6 -> WidgetIndices.GrandExchange.SIXTH_SLOT_DYNAMIC_CONTAINER;
+			case 7 -> WidgetIndices.GrandExchange.SEVENTH_SLOT_DYNAMIC_CONTAINER;
+			case 8 -> WidgetIndices.GrandExchange.EIGHT_SLOT_DYNAMIC_CONTAINER;
 			default -> -1;
 		};
 	}
