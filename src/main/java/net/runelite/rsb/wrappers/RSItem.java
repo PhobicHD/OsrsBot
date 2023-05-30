@@ -167,8 +167,9 @@ public class RSItem extends MethodProvider implements Clickable07, CacheProvider
 	 * @return The item's name or <code>null</code> if not found.
 	 */
 	public String getName() {
-		if (component != null && component.getName() != null) {
+		if (component != null && component.getName() != null && !component.getName().equals("")) {
 			return component.getName().replaceAll("<.*?>", "");
+
 		} else {
 			ItemDefinition definition = getDefinition();
 			if (definition != null) {
