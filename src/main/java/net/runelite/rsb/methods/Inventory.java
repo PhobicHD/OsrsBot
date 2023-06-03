@@ -71,7 +71,7 @@ public class Inventory extends MethodProvider {
 	}
 
 	public boolean isOpen() {
-		return isOpen(getInterface().getValue());
+		return methods.game.getCurrentTab() == InterfaceTab.INVENTORY;
 	}
 
 	public boolean open() {
@@ -79,6 +79,24 @@ public class Inventory extends MethodProvider {
 			return methods.game.openTab(InterfaceTab.INVENTORY);
 		}
 		return true;
+	}
+
+	public boolean moveItem(RSItem item, int target) {
+		if (item != null) {
+			if (item.doHover()) {
+				int id = item.getID();
+				RSWidget invInterface = getInterface().getValue();
+				RSWidget comp = invInterface.getDynamicComponent(target);
+				methods.mouse.drag((int)comp.getCenter().getX(), (int)comp.getCenter().getY());
+				sleepUntil(() -> getItemAt(target) != null && getItemAt(target).getID() == id, 1000);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean moveItem(int index, int target) {
+		return moveItem(getItemAt(index), target);
 	}
 
 	/**
