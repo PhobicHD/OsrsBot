@@ -22,6 +22,14 @@ public class RSNPCQueryBuilder extends PositionableQueryBuilder<RSNPC, RSNPCQuer
         return filter(npc -> !npc.isInCombat());
     }
 
+    public RSNPCQueryBuilder isDead() {
+        return filter(npc -> npc.getAccessor().isDead());
+    }
+
+    public RSNPCQueryBuilder isNotDead() {
+        return filter(npc -> !npc.getAccessor().isDead());
+    }
+
     public RSNPCQueryBuilder isIdle() {
         return filter(npc -> npc.isIdle());
     }
