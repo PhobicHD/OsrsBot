@@ -1,5 +1,6 @@
 package net.runelite.rsb.internal;
 
+import com.github.joonasvali.naturalmouse.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.rsb.botLauncher.BotLite;
 import net.runelite.api.Client;
@@ -8,6 +9,7 @@ import net.runelite.rsb.internal.input.VirtualMouse;
 
 import java.applet.Applet;
 import java.awt.event.*;
+import java.util.function.Supplier;
 
 @Slf4j
 @SuppressWarnings("removal")
@@ -412,4 +414,7 @@ public class InputManager {
 		mouseHandler.moveMouse(x, y);
 	}
 
+	public void windMouse(final int x, final int y, Supplier<Pair<Integer, Integer>> supplier) {
+		mouseHandler.moveMouse(x, y, supplier);
+	}
 }

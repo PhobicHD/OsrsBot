@@ -1,5 +1,6 @@
 package net.runelite.rsb.wrappers.common;
 
+import com.github.joonasvali.naturalmouse.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.rsb.util.StdRandom;
 import net.runelite.api.Point;
@@ -25,15 +26,12 @@ public class ClickBox implements Clickable07 {
 
     @Override
     public boolean doAction(String action, String option) {
-        Point point = getRandomPoint();
-        if (point != null && isClickable()) {
-            for (int i = 0; i < 3; i++) {
-                if (!contains(methods.mouse.getLocation())) {
-                    methods.mouse.move(point);
-                }
-                if (methods.menu.doAction(action, option)) {
-                    return true;
-                }
+        for (int i = 0; i < 3; i++) {
+            if (!contains(methods.mouse.getLocation())) {
+                doHover();
+            }
+            if (methods.menu.doAction(action, option)) {
+                return true;
             }
         }
         return false;
@@ -46,16 +44,13 @@ public class ClickBox implements Clickable07 {
 
     @Override
     public boolean doClick(boolean leftClick) {
-        Point point = getRandomPoint();
-        if (point != null && isClickable()) {
-            for (int i = 0; i < 3; i++) {
-                if (!contains(methods.mouse.getLocation())) {
-                    methods.mouse.move(point);
-                }
-                if (contains(methods.mouse.getLocation())) {
-                    methods.mouse.click(leftClick);
-                    return true;
-                }
+        for (int i = 0; i < 3; i++) {
+            if (!contains(methods.mouse.getLocation())) {
+                doHover();
+            }
+            if (contains(methods.mouse.getLocation())) {
+                methods.mouse.click(leftClick);
+                return true;
             }
         }
         return false;
@@ -67,7 +62,16 @@ public class ClickBox implements Clickable07 {
         if (point != null && isClickable()) {
             for (int i = 0; i < 3; i++) {
                 if (!contains(methods.mouse.getLocation())) {
-                    methods.mouse.move(point);
+                    Point offset = getOffset(point);
+                    if (offset != null) {
+                        methods.inputManager.windMouse(point.getX(), point.getY(), () -> {
+                            Point updatedPoint = getPointFromOffset(offset);
+                            if (updatedPoint != null) {
+                                return new Pair<Integer, Integer>(updatedPoint.getX(), updatedPoint.getY());
+                            }
+                            return null;
+                        });
+                    }
                 }
                 if (contains(methods.mouse.getLocation())) {
                     return true;

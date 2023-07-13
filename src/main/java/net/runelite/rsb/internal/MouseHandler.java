@@ -1,9 +1,11 @@
 package net.runelite.rsb.internal;
 
+import com.github.joonasvali.naturalmouse.api.MouseMotion;
 import com.github.joonasvali.naturalmouse.api.MouseMotionFactory;
 import com.github.joonasvali.naturalmouse.api.MouseMotionObserver;
 import com.github.joonasvali.naturalmouse.support.*;
 import com.github.joonasvali.naturalmouse.util.FactoryTemplates;
+import com.github.joonasvali.naturalmouse.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.rsb.internal.naturalmouse.RSBSystemCalls;
 import net.runelite.rsb.util.Timer;
@@ -14,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 /**
  * @author BenLand100
@@ -348,6 +351,21 @@ public class MouseHandler {
 	public void moveMouse(final int x, final int y) {
 		try {
 			motionFactory.move(x, y);
+		} catch (InterruptedException e) {
+			log.debug("Mouse move failed to execute properly.", e);
+		}
+	}
+
+	public void moveMouse(final int x, final int y, Supplier<Pair<Integer, Integer>> supplier) {
+		MouseMotionObserver observer = new MouseMotionObserver() {
+			@Override
+			public Pair<Integer, Integer> observe(int xPos, int yPos) {
+				return supplier.get();
+			}
+		};
+		try {
+			MouseMotion mouseMotion = motionFactory.build(x,y);
+			motionFactory.build(x,y).move(observer);
 		} catch (InterruptedException e) {
 			log.debug("Mouse move failed to execute properly.", e);
 		}

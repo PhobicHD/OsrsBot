@@ -57,7 +57,8 @@ dependencies {
     }
 
     implementation 'com.github.OSRSB:OSRSBPlugin:main-SNAPSHOT'
-    implementation group: 'com.github.joonasvali.naturalmouse', name: 'naturalmouse', version: '2.0.3'
+    //implementation group: 'com.github.joonasvali.naturalmouse', name: 'naturalmouse', version: '2.0.3'
+    implementation 'com.github.phobicHD:naturalmousemotion:latest'
     implementation group: 'javassist', name: 'javassist', version: '3.12.1.GA'
     implementation group: 'net.sf.jopt-simple', name:'jopt-simple', version: '5.0.4'
 }
