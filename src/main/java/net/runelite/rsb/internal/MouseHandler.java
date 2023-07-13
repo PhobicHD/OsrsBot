@@ -8,14 +8,11 @@ import com.github.joonasvali.naturalmouse.util.FactoryTemplates;
 import com.github.joonasvali.naturalmouse.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.rsb.internal.naturalmouse.RSBSystemCalls;
-import net.runelite.rsb.util.Timer;
 
 import java.awt.*;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
