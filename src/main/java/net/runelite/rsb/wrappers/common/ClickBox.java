@@ -2,18 +2,20 @@ package net.runelite.rsb.wrappers.common;
 
 import com.github.joonasvali.naturalmouse.util.Pair;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.rsb.event.listener.PaintListener;
 import net.runelite.rsb.util.StdRandom;
 import net.runelite.api.Point;
 
-import java.awt.Shape;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.PathIterator;
 
 
 import static net.runelite.rsb.methods.MethodProvider.methods;
 @Slf4j
-public class ClickBox implements Clickable07 {
+public class ClickBox implements Clickable07, PaintListener {
     Clickable07 clickable;
+    Shape shape;
+    long lastShapeUpdate = 0;
 
     public ClickBox(Clickable07 clickable) {
         this.clickable = clickable;
@@ -83,7 +85,11 @@ public class ClickBox implements Clickable07 {
 
     @Override
     public Shape getClickShape() {
-        return clickable.getClickShape();
+        if (shape == null || System.currentTimeMillis() - lastShapeUpdate > 50) {
+            shape = clickable.getClickShape();
+            lastShapeUpdate = System.currentTimeMillis();
+        }
+        return shape;
     }
 
     @Override
@@ -97,7 +103,7 @@ public class ClickBox implements Clickable07 {
     }
 
     public boolean contains(Point point) {
-        Shape shape = clickable.getClickShape();
+        Shape shape = getClickShape();
         if (shape != null) {
             return shape.contains(point.getX(), point.getY());
         }
@@ -109,7 +115,7 @@ public class ClickBox implements Clickable07 {
      * @return A random point within the bounds of the shape
      */
     public Point getRandomPoint() {
-        Shape shape = clickable.getClickShape();
+        Shape shape = getClickShape();
         if (shape != null) {
             Rectangle bounds = shape.getBounds();
             for (int j = 0; j < 100; j++) {
@@ -129,7 +135,7 @@ public class ClickBox implements Clickable07 {
      * @return The offset of the point from the top left corner of the bounds
      */
     public Point getOffset(Point point) {
-        Shape shape = clickable.getClickShape();
+        Shape shape = getClickShape();
         if (shape != null) {
             Rectangle bounds = shape.getBounds();
             int x = point.getX();
@@ -147,7 +153,7 @@ public class ClickBox implements Clickable07 {
      * @return The point from the offset of the top left corner of the bounds
      */
     public Point getPointFromOffset(Point offset) {
-        Shape shape = clickable.getClickShape();
+        Shape shape = getClickShape();
         if (shape != null) {
             Rectangle bounds = shape.getBounds();
             int x = (int) bounds.getX() + offset.getX();
@@ -308,5 +314,11 @@ public class ClickBox implements Clickable07 {
         double xProj = xStart + t * (xEnd - xStart);
         double yProj = yStart + t * (yEnd - yStart);
         return Math.sqrt(Math.pow(x - xProj, 2) + Math.pow(y - yProj, 2));
+    }
+
+    @Override
+    public void onRepaint(Graphics render) {
+        lastShapeUpdate = System.currentTimeMillis();
+        shape = clickable.getClickShape();
     }
 }
