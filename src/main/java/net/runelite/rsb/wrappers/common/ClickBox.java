@@ -66,6 +66,7 @@ public class ClickBox implements Clickable07, PaintListener {
                 if (!contains(methods.mouse.getLocation())) {
                     Point offset = getOffset(point);
                     if (offset != null) {
+                        methods.runeLite.getEventManager().addListener(this);
                         methods.inputManager.windMouse(point.getX(), point.getY(), () -> {
                             Point updatedPoint = getPointFromOffset(offset);
                             if (updatedPoint != null) {
@@ -73,6 +74,7 @@ public class ClickBox implements Clickable07, PaintListener {
                             }
                             return null;
                         });
+                        methods.runeLite.getEventManager().removeListener(this);
                     }
                 }
                 if (contains(methods.mouse.getLocation())) {
